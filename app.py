@@ -74,15 +74,27 @@ def get_users():
         return create_response(data, status=status)
 
 
-@app.route("/users/<id>")
+@app.route("/users/<id>", methods=["GET", "PUT"])
 def get_by_id(id):
     id = int(id)
     if db.getById("users", id) is None:
         status = 404
         message = "A user could not be found for the given id."
         return create_response(status=status, message=message)
-    data = {id: db.getById("users", id)}
-    return create_response(data)
+    if request.method == "GET":
+        data = {id: db.getById("users", id)}
+        return create_response(data)
+    if request.method == "PUT":
+        status = 201
+        data = dict(request.form)
+        if "name" in data:
+            data["name"] = data["name"][0]
+        if "age" in data:
+            data["age"] = int(data["age"][0])
+        if "team" in data:
+            data["team"] = data["team"][0]
+        new = db.updateById("users", id, data)
+        return create_response(new, status)
 
 
 """

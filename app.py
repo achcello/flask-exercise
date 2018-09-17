@@ -74,7 +74,7 @@ def get_users():
         return create_response(data, status=status)
 
 
-@app.route("/users/<id>", methods=["GET", "PUT"])
+@app.route("/users/<id>", methods=["GET", "PUT", "DELETE"])
 def get_by_id(id):
     id = int(id)
     if db.getById("users", id) is None:
@@ -82,7 +82,7 @@ def get_by_id(id):
         message = "A user could not be found for the given id."
         return create_response(status=status, message=message)
     if request.method == "GET":
-        data = {id: db.getById("users", id)}
+        data = {"user": db.getById("users", id)}
         return create_response(data)
     if request.method == "PUT":
         status = 201
@@ -95,6 +95,10 @@ def get_by_id(id):
             data["team"] = data["team"][0]
         new = db.updateById("users", id, data)
         return create_response(new, status)
+    if request.method == "DELETE":
+        db.deleteById("users", id)
+        message = "User " + str(id) + " has been deleted."
+        return create_response(message=message)
 
 
 """

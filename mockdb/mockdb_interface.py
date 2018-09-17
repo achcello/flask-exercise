@@ -19,6 +19,9 @@ def getByTeam(type, team):
 def create(type, payload):
     last_id = max([i["id"] for i in get(type)])
     new_id = last_id + 1
+    payload["name"] = payload["name"][0]
+    payload["age"] = int(payload["age"][0])
+    payload["team"] = payload["team"][0]
     payload["id"] = new_id
     db_state[type].append(payload)
     return payload

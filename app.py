@@ -52,15 +52,26 @@ def mirror(name):
     return create_response(data)
 
 
-@app.route("/users")
+@app.route("/users", methods=["GET", "POST"])
 def get_users():
-    team = request.args.get("team")
-    if team is not None:
-        data = {"users": db.getByTeam("users", team)}
+    if request.method == "GET":
+        team = request.args.get("team")
+        if team is not None:
+            data = {"users": db.getByTeam("users", team)}
+            return create_response(data)
+        data = {"users": db.get("users")}
+        print(data)
         return create_response(data)
-    data = {"users": db.get("users")}
-    print(data)
-    return create_response(data)
+    if request.method == "POST":
+        data = request.form
+        if "name" not in data or "age" not in data or "team" not in data:
+            status = 422
+            message = ("The required information (name, age, and team) was" +
+                       " not given.")
+            return create_response(status=status, message=message)
+        status = 201
+        data = db.create("users", dict(data))
+        return create_response(data, status=status)
 
 
 @app.route("/users/<id>")

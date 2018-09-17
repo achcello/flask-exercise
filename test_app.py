@@ -43,11 +43,7 @@ def test_get_user_id(client):
 
 
 def test_create_new_user(client):
-    res = client.post("/users", data={
-        "name": "Aryn",
-        "age": 19,
-        "team": "idk"
-    })
+    res = client.post("/users", data={"name": "Aryn", "age": 19, "team": "idk"})
     assert res.status_code == 201
     res_user = res.json["result"]
     assert res_user["name"] == "Aryn"
@@ -55,9 +51,7 @@ def test_create_new_user(client):
 
 
 def test_update_user(client):
-    res = client.put("/users/2", data={
-        "age": 1618
-    })
+    res = client.put("/users/2", data={"age": 1618})
     assert res.status_code == 201
     assert res.json["result"]["age"] == 1618
 

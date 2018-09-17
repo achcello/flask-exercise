@@ -66,8 +66,9 @@ def get_users():
         data = request.form
         if "name" not in data or "age" not in data or "team" not in data:
             status = 422
-            message = ("The required information (name, age, and team) was" +
-                       " not given.")
+            message = (
+                "The required information (name, age, and team) was" + " not given."
+            )
             return create_response(status=status, message=message)
         status = 201
         data = db.create("users", dict(data))

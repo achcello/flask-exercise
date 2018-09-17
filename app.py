@@ -59,6 +59,17 @@ def get_users():
     return create_response(data)
 
 
+@app.route("/users/<id>")
+def get_by_id(id):
+    id = int(id)
+    if db.getById("users", id) is None:
+        status = 404
+        message = "A user could not be found for the given id."
+        return create_response(status=status, message=message)
+    data = {id: db.getById("users", id)}
+    return create_response(data)
+
+
 """
 ~~~~~~~~~~~~ END API ~~~~~~~~~~~~
 """
